@@ -460,19 +460,6 @@ abbr {
   isolation: isolate;
   overflow: hidden;
 }
-.hero__photo {
-  position: absolute;
-  inset: 0;
-  z-index: -3;
-}
-.hero__shade {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  background:
-    linear-gradient(180deg, rgb(var(--night-rgb) / 0.75) 0%, rgb(var(--night-rgb) / 0.35) 32%, rgb(var(--night-rgb) / 0.55) 68%, var(--night) 100%),
-    radial-gradient(ellipse at 30% 60%, transparent 0%, rgb(var(--night-rgb) / 0.45) 80%);
-}
 .hero__inner {
   flex: 1;
   display: flex;
@@ -482,10 +469,6 @@ abbr {
 }
 .hero__badge {
   align-self: flex-start;
-}
-.hero__copy {
-  margin-top: auto;
-  max-width: 1000px;
 }
 .hero__title {
   font-family: var(--font-display);
@@ -517,19 +500,6 @@ abbr {
   display: flex;
   flex-wrap: wrap;
   gap: var(--s-3);
-}
-/* h1 is the LCP element, so it paints immediately; the lines below it animate in */
-.hero__copy > :not(h1) {
-  animation: heroIn 0.9s var(--ease) both;
-}
-.hero__copy > :nth-child(2) {
-  animation-delay: 0.1s;
-}
-.hero__copy > :nth-child(3) {
-  animation-delay: 0.2s;
-}
-.hero__copy > :nth-child(4) {
-  animation-delay: 0.3s;
 }
 @keyframes heroIn {
   from {
@@ -1644,10 +1614,8 @@ abbr {
 }
 
 /* ---------- Rendering performance: skip work for sections far below the fold ---------- */
-#kitchen,
-#visit,
-#reviews,
-#faq,
+/* Only the footer: nav links point at the sections above it, and content-visibility's
+   estimated heights made anchor scrolling land in the wrong place (Reviews overshot ~570px). */
 .footer {
   content-visibility: auto;
   contain-intrinsic-size: auto 900px;
@@ -1656,21 +1624,6 @@ abbr {
 /* =========================================================
    Rebuild pass: hero, hover zoom, menu, modals, ordering
    ========================================================= */
-
-/* ---------- Hero: real steam in the photo, headline over the dark negative space ---------- */
-.hero__photo img {
-  object-position: 68% 78%;
-}
-.hero__shade {
-  background:
-    radial-gradient(ellipse 70% 60% at 22% 55%, rgb(var(--night-rgb) / 0.7) 0%, rgb(var(--night-rgb) / 0.25) 60%, transparent 80%),
-    linear-gradient(180deg, rgb(var(--night-rgb) / 0.55) 0%, transparent 30%, transparent 70%, var(--night) 100%);
-}
-@media (max-width: 767px) {
-  .hero__photo img {
-    object-position: 72% 85%;
-  }
-}
 
 /* ---------- Butter smooth hover zoom on food photos (transform only, GPU) ---------- */
 .zoomable img {
@@ -1690,8 +1643,7 @@ abbr {
     will-change: transform;
   }
   .zoomable:hover img,
-  .zoom-host:hover .zoomable img,
-  .hero:hover .hero__photo img {
+  .zoom-host:hover .zoomable img {
     transform: translateZ(0) scale(1.08);
   }
   .zoomable:hover::after,
@@ -2298,58 +2250,20 @@ abbr {
   color: var(--lacquer);
   margin-top: 2px;
 }
-.basket {
+.ordermodal__summary {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
   margin-bottom: var(--s-5);
-  padding: var(--s-4);
+  padding: var(--s-3) var(--s-4);
   border-radius: var(--r-md);
   border: 1px solid rgb(var(--gold-rgb) / 0.5);
   background: var(--cream-2);
-}
-.basket__title {
-  font-size: var(--fs-xs);
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--lacquer);
-  margin-bottom: var(--s-2);
-}
-.basket li {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  align-items: center;
-  gap: var(--s-3);
-  padding: var(--s-2) 0;
-  border-bottom: 1px dotted rgb(var(--night-rgb) / 0.25);
   font-size: var(--fs-sm);
 }
-.basket__name .zh {
+.ordermodal__summary .icon,
+.ordermodal__summary strong {
   color: var(--lacquer);
-}
-.basket__price {
-  font-weight: 700;
-  color: var(--lacquer);
-  min-width: 64px;
-  text-align: right;
-}
-.basket__total {
-  display: flex;
-  justify-content: space-between;
-  margin-top: var(--s-3);
-  font-size: var(--fs-lg);
-}
-.basket__total strong {
-  color: var(--lacquer);
-}
-.basket__hint {
-  margin-top: var(--s-1);
-  font-size: var(--fs-xs);
-  color: var(--ink-soft);
-}
-.basket__clear {
-  margin-top: var(--s-2);
-  font-size: var(--fs-xs);
-  color: var(--ink-soft);
-  text-decoration: underline;
 }
 @media (max-width: 767px) {
   .ordermodal {
@@ -2511,4 +2425,961 @@ button.btn--outline {
 }
 .chip.is-active .zh {
   color: var(--gold-light);
+}
+
+/* ---------- Dish modal photo: always a food photo, lacquer panel only if it fails ---------- */
+.dishmodal__media {
+  position: relative;
+  overflow: hidden;
+  background: var(--lacquer-deep);
+}
+.dishmodal__photo {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+.dishmodal__photo::after {
+  /* dark fade along the bottom for depth, plus the usual soft vignette */
+  background:
+    linear-gradient(0deg, rgb(var(--night-rgb) / 0.6), rgb(var(--night-rgb) / 0.15) 35%, transparent 60%),
+    radial-gradient(ellipse at center, transparent 55%, rgb(0 0 0 / 0.3) 100%);
+}
+.dishmodal__plate {
+  position: absolute;
+  inset: 0;
+  gap: var(--s-4);
+  padding: var(--s-8) var(--s-6);
+  background: linear-gradient(160deg, var(--lacquer-2) 0%, var(--lacquer) 45%, var(--lacquer-deep) 100%);
+  text-align: center;
+}
+.dishmodal__plate-name {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 3.4vw, 38px);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--gold);
+  text-wrap: balance;
+}
+.dishmodal__plate .dishmodal__glyphs {
+  font-size: clamp(32px, 4.5vw, 48px);
+  color: var(--gold-light);
+  opacity: 0.85;
+}
+@media (max-width: 767px) {
+  .dishmodal__media {
+    aspect-ratio: 16 / 10;
+  }
+  .dishmodal__photo,
+  .dishmodal__plate {
+    aspect-ratio: auto;
+  }
+}
+
+/* ---------- Basket button (header + mobile bar) ---------- */
+.cartbtn {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border-radius: var(--r-pill);
+  border: 1px solid rgb(var(--cream-rgb) / 0.25);
+  color: var(--cream);
+  background: transparent;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+.cartbtn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.cartbtn__icon {
+  display: grid;
+  place-items: center;
+  will-change: transform;
+}
+.cartbtn__badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  display: grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: var(--r-pill);
+  background: var(--gold);
+  color: var(--night);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 0 0 2px var(--night);
+}
+@media (max-width: 899px) {
+  .mobilebar {
+    grid-template-columns: 1fr 1fr auto;
+    align-items: center;
+  }
+  .mobilebar__cart {
+    width: 48px;
+    height: 48px;
+    border-color: rgb(var(--cream-rgb) / 0.35);
+  }
+}
+
+/* ---------- Basket drawer ---------- */
+.cart {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  display: flex;
+  justify-content: flex-end;
+  background: rgb(var(--night-rgb) / 0.7);
+}
+.cart__panel {
+  display: flex;
+  flex-direction: column;
+  width: min(440px, 100vw);
+  height: 100%;
+  background: var(--cream);
+  color: var(--ink);
+  border-left: 1px solid rgb(var(--gold-rgb) / 0.5);
+  box-shadow: -24px 0 60px rgb(0 0 0 / 0.35);
+  outline: none;
+  will-change: transform;
+}
+.cart__head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--s-1) var(--s-3);
+  padding: var(--s-6) calc(var(--s-6) + 52px) var(--s-5) var(--s-6);
+  border-bottom: 1px solid rgb(var(--gold-rgb) / 0.4);
+}
+.cart__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  line-height: 1.1;
+}
+.cart__title .zh {
+  font-size: 0.6em;
+  color: var(--gold-ink);
+}
+.cart__count {
+  font-size: var(--fs-sm);
+  color: var(--ink-soft);
+}
+.cart__close {
+  top: var(--s-5);
+  right: var(--s-5);
+}
+.cart__list {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--s-2) var(--s-6);
+}
+.cartline {
+  overflow: hidden;
+  border-bottom: 1px dotted rgb(var(--night-rgb) / 0.25);
+}
+.cartline__inner {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  gap: var(--s-3);
+  padding: var(--s-4) 0;
+}
+.cartline__thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--r-md);
+  object-fit: cover;
+  background: var(--cream-2);
+}
+.cartline__thumb--plain {
+  display: block;
+  background: linear-gradient(160deg, var(--lacquer-2), var(--lacquer-deep));
+}
+.cartline__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.cartline__name {
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+.cartline__name .zh {
+  color: var(--gold-ink);
+}
+.cartline__each {
+  font-size: var(--fs-xs);
+  color: var(--ink-soft);
+  margin-bottom: var(--s-2);
+}
+.cartline__end {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.cartline__remove {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin: -6px -6px 0 0;
+  border-radius: var(--r-pill);
+  color: var(--ink-soft);
+  transition: color 0.2s var(--ease), background-color 0.2s var(--ease);
+}
+.cartline__remove:hover {
+  color: var(--lacquer);
+  background: rgb(var(--lacquer-rgb) / 0.08);
+}
+.cartline__price {
+  font-weight: 700;
+  color: var(--lacquer);
+}
+.cart__foot {
+  display: grid;
+  gap: var(--s-4);
+  padding: var(--s-5) var(--s-6) calc(var(--s-5) + env(safe-area-inset-bottom));
+  border-top: 1px solid rgb(var(--gold-rgb) / 0.4);
+  background: var(--cream-2);
+}
+.cart__mode {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 4px;
+  border-radius: var(--r-pill);
+  background: rgb(var(--night-rgb) / 0.08);
+}
+.cart__mode button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: 38px;
+  border-radius: var(--r-pill);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--ink-soft);
+  transition: background-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+.cart__mode button.is-active {
+  background: var(--night);
+  color: var(--cream);
+}
+.cart__sums {
+  display: grid;
+  gap: var(--s-1);
+  font-size: var(--fs-sm);
+}
+.cart__sums div {
+  display: flex;
+  justify-content: space-between;
+}
+.cart__sums dt {
+  color: var(--ink-soft);
+}
+.cart__total {
+  margin-top: var(--s-2);
+  padding-top: var(--s-2);
+  border-top: 1px dotted rgb(var(--night-rgb) / 0.3);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+}
+.cart__total dt {
+  color: var(--ink);
+}
+.cart__total dd {
+  color: var(--lacquer);
+}
+.cart__hint {
+  margin-top: calc(var(--s-2) * -1);
+  font-size: var(--fs-xs);
+  color: var(--lacquer);
+}
+.cart__actions {
+  display: grid;
+  gap: var(--s-3);
+}
+.btn--wa-outline {
+  border: 1.5px solid #1f8f4e;
+  color: #17713d;
+  background: transparent;
+}
+.btn--wa-outline:hover {
+  background: rgb(31 143 78 / 0.08);
+}
+.cart__clear {
+  justify-self: center;
+  font-size: var(--fs-xs);
+  color: var(--ink-soft);
+  text-decoration: underline;
+}
+.cart__empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  padding: var(--s-10) var(--s-6);
+  text-align: center;
+}
+.cart__empty-icon {
+  display: grid;
+  place-items: center;
+  width: 80px;
+  height: 80px;
+  margin-bottom: var(--s-2);
+  border-radius: var(--r-pill);
+  background: rgb(var(--lacquer-rgb) / 0.08);
+  color: var(--lacquer);
+}
+.cart__empty-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: 700;
+}
+.cart__empty-text {
+  color: var(--ink-soft);
+  margin-bottom: var(--s-4);
+}
+
+/* toast: basket icon in gold */
+.toast__icon {
+  flex: none;
+  color: var(--gold);
+}
+.toast {
+  padding-left: var(--s-4);
+}
+.toast {
+  width: max-content;
+}
+@media (max-width: 599px) {
+  .toast {
+    left: var(--s-4);
+    right: var(--s-4);
+    width: auto;
+    max-width: none;
+    translate: none;
+    border-radius: var(--r-lg);
+  }
+  .toast span {
+    flex: 1;
+  }
+}
+
+/* =========================================================
+   Hero, take two: lacquer red, the shop's own chef as the star
+   ========================================================= */
+.hero {
+  color: var(--cream);
+  background:
+    radial-gradient(ellipse 55% 45% at 12% 8%, rgb(255 170 90 / 0.16), transparent 70%),
+    radial-gradient(ellipse 50% 60% at 78% 55%, rgb(255 140 60 / 0.12), transparent 70%),
+    linear-gradient(150deg, #a52a2a 0%, #8b1a1a 52%, #6a1212 100%);
+}
+/* 回 key-fret lattice (huiwen), barely there */
+.hero__pattern {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cpath d='M6 50V6h44v44H16V16h24v24H26v-14h6' fill='none' stroke='%23F3DC94' stroke-width='3' stroke-linecap='square'/%3E%3C/svg%3E");
+  background-size: 56px 56px;
+}
+.hero__inner {
+  padding-top: calc(var(--header-h) + var(--s-6));
+  padding-bottom: var(--s-10);
+}
+.hero__grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "head"
+    "line"
+    "actions";
+  grid-template-rows: 1fr auto auto;
+  column-gap: var(--s-8);
+  margin-top: var(--s-4);
+}
+.hero__head {
+  grid-area: head;
+  align-self: end;
+}
+.hero__actions {
+  grid-area: actions;
+}
+.hero__title {
+  font-size: clamp(56px, 9vw, 128px);
+}
+.hero__sub {
+  color: var(--gold-light);
+}
+.hero__line {
+  grid-area: line;
+}
+.hero__line span {
+  display: inline-block;
+}
+.hero__cta {
+  margin-top: var(--s-8);
+}
+.hero__human {
+  margin-top: var(--s-4);
+  max-width: 46ch;
+  font-size: var(--fs-sm);
+  color: rgb(var(--cream-rgb) / 0.82);
+}
+
+/* lines under the name, then the actions, arrive in sequence (h1 paints first: it is the LCP) */
+.hero__head > :not(h1),
+.hero__line,
+.hero__actions > * {
+  animation: heroIn 0.9s var(--ease) both;
+  animation-delay: var(--d, 0s);
+}
+.hero__head > :nth-child(2) {
+  --d: 0.1s;
+}
+.hero__line {
+  --d: 0.2s;
+}
+.hero__actions > :nth-child(1) {
+  --d: 0.3s;
+}
+.hero__actions > :nth-child(2) {
+  --d: 0.4s;
+}
+.hero__actions > :nth-child(3) {
+  --d: 0.5s;
+}
+/* when the intro plays, the hero animates in as the curtain lifts */
+html[data-intro="play"] .hero__head > :not(h1),
+html[data-intro="play"] .hero__line,
+html[data-intro="play"] .hero__actions > * {
+  animation-delay: calc(2.05s + var(--d, 0s));
+}
+
+/* most-ordered plates: real food, warm and close up */
+.hero__plates {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  margin-top: var(--s-8);
+}
+.hero__plates-label {
+  max-width: 72px;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+}
+.plates {
+  display: flex;
+}
+.plates li + li {
+  margin-left: -12px;
+}
+.plates li {
+  position: relative;
+}
+.plates li:hover,
+.plates li:focus-within {
+  z-index: 2;
+}
+.plate {
+  position: relative;
+  display: block;
+  width: 92px;
+  height: 92px;
+  padding: 0;
+  border-radius: 50%;
+  border: 3px solid var(--gold);
+  background: var(--night);
+  box-shadow: 0 10px 24px rgb(0 0 0 / 0.38);
+  cursor: pointer;
+  transition: transform 0.35s var(--ease);
+}
+.plate__photo {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+.plate__photo img {
+  filter: saturate(1.15) sepia(0.12);
+}
+.plate__name {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 8px);
+  translate: -50% 0;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: var(--night);
+  color: var(--cream);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate3d(0, -4px, 0);
+  transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
+  pointer-events: none;
+}
+.plate:hover,
+.plate:focus-visible {
+  transform: translate3d(0, -6px, 0) rotate(-4deg);
+}
+.plate:hover .plate__name,
+.plate:focus-visible .plate__name {
+  opacity: 1;
+  transform: none;
+}
+
+/* lanterns frame the top */
+.lantern--hero-a {
+  left: 53%;
+  right: auto;
+  width: 88px;
+  top: calc(var(--header-h) - 28px);
+}
+.lantern--hero-b {
+  right: 3%;
+}
+
+@media (max-width: 899px) {
+  .hero__grid {
+    grid-template-rows: auto;
+    margin-top: var(--s-6);
+  }
+  .hero__cta {
+    margin-top: var(--s-6);
+  }
+  .lantern--hero-a {
+    left: auto;
+    right: 6%;
+  }
+}
+@media (max-width: 599px) {
+  .hero__plates {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--s-3);
+  }
+  .hero__plates-label {
+    max-width: none;
+  }
+  .plate {
+    width: 76px;
+    height: 76px;
+  }
+}
+
+/* ---------- Intro: the chef says hello (first visit per session) ---------- */
+.intro {
+  display: none;
+}
+html[data-intro="play"] .intro {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 42%, rgb(255 170 90 / 0.16), transparent 70%),
+    #8b1a1a;
+  animation: introOut 0.5s cubic-bezier(0.65, 0, 0.35, 1) 2s forwards;
+  will-change: transform, opacity;
+}
+.intro__stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-6);
+}
+.intro__chef-rise {
+  animation: introRise 0.8s cubic-bezier(0.33, 1, 0.68, 1) both;
+}
+.intro__chef {
+  display: block;
+  height: 60vh;
+  max-height: calc(100svh - 220px);
+  width: auto;
+  transform-origin: 50% 92%;
+  animation: introWave 1s ease-in-out 0.8s both;
+}
+.intro__wordmark {
+  width: min(72vw, 360px);
+  height: auto;
+  animation: introFade 0.4s var(--ease) 1.2s both;
+}
+.intro__sub {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-variant: small-caps;
+  color: var(--cream);
+  text-align: center;
+  animation: introFade 0.4s var(--ease) 1.4s both;
+}
+@keyframes introRise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 50vh, 0) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes introWave {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  12.5%,
+  62.5% {
+    transform: rotate(-3deg);
+  }
+  37.5%,
+  87.5% {
+    transform: rotate(3deg);
+  }
+}
+@keyframes introFade {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes introOut {
+  to {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+    visibility: hidden;
+  }
+}
+@media (max-width: 599px) {
+  .hero__line {
+    font-size: 22px;
+    line-height: 1.3;
+  }
+  .hero__line span {
+    display: block;
+  }
+  .hero__title {
+    font-size: clamp(52px, 15vw, 72px);
+  }
+}
+@media (max-width: 599px) {
+  .hero__line {
+    font-size: 20px;
+  }
+}
+.hero__line span {
+  text-wrap: balance;
+}
+
+/* ---------- Wordmark: header, desktop nav, footer ---------- */
+.logo {
+  height: 40px;
+  width: auto;
+  display: block;
+}
+.header__nav {
+  display: none;
+}
+@media (min-width: 1200px) {
+  .header__row {
+    justify-content: flex-start;
+  }
+  .header__nav {
+    display: block;
+    margin-left: var(--s-8);
+  }
+  .header__nav ul {
+    display: flex;
+    gap: var(--s-6);
+  }
+  .header__nav a {
+    color: rgb(var(--cream-rgb) / 0.88);
+    text-decoration: none;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    padding: var(--s-2) 0;
+    background: linear-gradient(var(--gold), var(--gold)) 0 100% / 0 2px no-repeat;
+    transition: color 0.2s var(--ease), background-size 0.3s var(--ease);
+  }
+  .header__nav a:hover {
+    color: var(--gold);
+    background-size: 100% 2px;
+  }
+  .header__actions {
+    margin-left: auto;
+  }
+  /* the nav is already in the header, so the sticky mini nav is not needed here */
+  .mininav {
+    display: none;
+  }
+}
+@media (max-width: 899px) {
+  .logo {
+    height: 30px;
+  }
+}
+.footer__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+}
+/* 180px image = about 120px of chef once its transparent margins are pulled in */
+.footer__chef {
+  flex: none;
+  width: 180px;
+  height: auto;
+  margin: -21px -26px -19px -34px;
+}
+.footer__logo {
+  width: min(300px, 100%);
+  height: auto;
+  display: block;
+}
+.footer__tag {
+  margin-top: var(--s-2);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.footer__grid {
+  grid-template-columns: 1.7fr 1fr 1fr;
+}
+@media (max-width: 1023px) {
+  .footer__grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 599px) {
+  .footer__chef {
+    width: 140px;
+    margin: -16px -20px -15px -26px;
+  }
+  .footer__logo {
+    width: 100%;
+  }
+}
+
+/* ---------- Hero chef: walks in from the right, feet level with the food plates ---------- */
+@media (min-width: 900px) {
+  /* keep the copy clear of the chef */
+  .hero__grid {
+    max-width: min(60%, 760px);
+  }
+}
+.hero__inner {
+  position: relative;
+}
+.hero-chef {
+  /* image box is 3:4; the art sits inside it with 14.2% clear on the right and ~8.6% below the
+     shoe soles. The 46vw cap shrinks him on narrow desktops so he never crowds View Menu. */
+  --chef-h: min(64vh, 620px, 46vw);
+  --chef-w: calc(var(--chef-h) * 0.75);
+  --edge: calc(clamp(16px, 3vw, 48px) + 110px);
+  position: absolute;
+  z-index: 1;
+  /* hero__inner is the centred container: reach out to the viewport's right edge */
+  right: calc((100% - 100vw) / 2 + var(--edge) - var(--chef-w) * 0.142);
+  /* shoe soles on the line where the plates end (the container's bottom padding) */
+  bottom: calc(var(--s-10) - var(--chef-h) * 0.086);
+  width: var(--chef-w);
+  height: var(--chef-h);
+  pointer-events: none;
+  will-change: transform, opacity;
+  animation: chefWalkIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.4s both;
+}
+html[data-intro="play"] .hero-chef {
+  animation-delay: 3.45s;
+}
+.hero-chef__lean {
+  width: 100%;
+  height: 100%;
+  transform-origin: 52% 92%;
+  will-change: transform;
+}
+.hero-chef__float {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+  animation: chefIdle 4.5s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+}
+.hero-chef__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+}
+/* the shadow stays on the ground under the feet and softens as he rises */
+.hero-chef__shadow {
+  position: absolute;
+  left: 52%;
+  bottom: calc(8.6% - 10px);
+  width: 62%;
+  height: 22px;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgb(0 0 0 / 0.45), rgb(0 0 0 / 0.16) 50%, transparent 72%);
+  will-change: transform, opacity;
+  animation: chefShadow 4.5s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+}
+/* a soft glow on the sparkle above his hat (the star is part of the artwork) */
+.hero-chef__sparkle {
+  position: absolute;
+  left: 45.1%;
+  top: 9.6%;
+  width: 7%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(255 244 200 / 0.95) 0%, rgb(var(--gold-rgb) / 0.55) 35%, transparent 70%);
+  mix-blend-mode: screen;
+  will-change: opacity;
+  animation: sparklePulse 2.5s ease-in-out infinite alternate;
+}
+@keyframes chefWalkIn {
+  from {
+    opacity: 0;
+    transform: translate3d(80px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes chefIdle {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -7px, 0);
+  }
+}
+@keyframes chefShadow {
+  0%,
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scaleX(0.92);
+    opacity: 0.78;
+  }
+}
+@keyframes sparklePulse {
+  from {
+    opacity: 0.6;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (max-width: 899px) {
+  .hero-chef {
+    --chef-w: 140px;
+    --chef-h: calc(var(--chef-w) / 0.75);
+    --edge: 8px;
+    bottom: calc(var(--s-10) - var(--chef-h) * 0.081);
+  }
+  .hero-chef__shadow {
+    height: 12px;
+    bottom: calc(8.1% - 6px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* a still chef: no entrance, float, pulse or shadow breathing (the lean is skipped in JS) */
+  .hero-chef,
+  .hero-chef__float,
+  .hero-chef__shadow,
+  .hero-chef__sparkle {
+    animation: none;
+  }
+}
+
+/* ---------- Trust badges link to Reviews ---------- */
+.trust-link {
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 250ms ease-out, box-shadow 250ms ease-out;
+}
+.trust-link:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 0 1px rgb(var(--gold-rgb) / 0.75), 0 6px 22px rgb(var(--gold-rgb) / 0.35);
+}
+.trust-link:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+.footer__rating.trust-link {
+  display: inline-flex;
+  margin-left: calc(var(--s-3) * -1);
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--r-pill);
+}
+.footer__rating.trust-link:hover {
+  color: var(--cream);
+}
+@media (prefers-reduced-motion: reduce) {
+  /* keep the click and the glow, drop the scale */
+  .trust-link:hover {
+    transform: none;
+  }
+}
+
+/* the click landed: a soft gold glow pulses once behind the Reviews heading */
+.reviews .section-head {
+  isolation: isolate;
+}
+.reviews .section-head::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -48px -64px;
+  background: radial-gradient(closest-side at 38% 55%, rgb(var(--gold-rgb) / 0.42), rgb(var(--gold-rgb) / 0.12) 55%, transparent 100%);
+  opacity: 0;
+  pointer-events: none;
+}
+.reviews.is-flash .section-head::before {
+  animation: reviewsFlash 1s ease-out;
+}
+@keyframes reviewsFlash {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }

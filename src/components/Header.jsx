@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, m as motion } from "framer-motion";
-import MagicWokLogo from "./MagicWokLogo.jsx";
+import MagicWokWordmark from "./MagicWokWordmark.jsx";
 import Icon from "../icons/Icon.jsx";
 import { BUSINESS } from "../data/site.js";
-import { OrderButton } from "./Order.jsx";
+import { CartButton, OrderButton } from "./Order.jsx";
 import { useScrollY } from "../hooks.js";
 
 export const NAV = [
@@ -48,15 +48,26 @@ export default function Header() {
           >
             <Icon name={open ? "close" : "menu"} />
           </button>
-          <a href="#top" className="header__logo" aria-label="MAGIC WOK, back to top">
-            <MagicWokLogo className="logo" />
+          <a href="#top" className="header__logo" aria-label="Magic Wok, back to top">
+            <MagicWokWordmark className="logo" title="" />
           </a>
+          {/* desktop: the nav sits beside the wordmark (the sticky mini nav takes over below 1200px) */}
+          <nav className="header__nav" aria-label="Main">
+            <ul>
+              {NAV.map((n) => (
+                <li key={n.href}>
+                  <a href={n.href}>{n.label}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
           <div className="header__actions">
             <a href={BUSINESS.phoneHref} className="btn btn--ghost btn--sm header__call">
               <Icon name="phone" size={18} />
               <span>{BUSINESS.phone}</span>
             </a>
             <OrderButton className="btn btn--gold btn--sm header__order" />
+            <CartButton className="header__cart" />
           </div>
           <a href={BUSINESS.phoneHref} className="icon-btn icon-btn--gold header__phone" aria-label={`Call ${BUSINESS.phone}`}>
             <Icon name="phone" />

@@ -80,7 +80,6 @@ export const img = u;
 
 // Unsplash photography (no images are taken from the shop's current site, no people's faces)
 export const IMAGES = {
-  hero: "1523905330026-b8bd1f5f320e", // dumplings in a bamboo steamer, natural steam, dark
   wokFlame: "1717321302149-3c6c9c76de67", // wok engulfed in flame, hands only
   wokKitchen: "1723967052599-93403a001bb1", // wok over the burner in a working kitchen
   prep: "1690944250252-71a40fa6fccf", // hands chopping onion
@@ -88,6 +87,15 @@ export const IMAGES = {
   spiceMarket: "1532336414038-cf19250c5757",
   spiceFlatlay: "1596040033229-a9821ebd058d", // dried chillies, cinnamon, seeds
 };
+
+// Four close-up food photos on the hero's "Most ordered" row. `name` is the exact menu name,
+// so tapping a plate opens that dish.
+export const HERO_PLATES = [
+  { name: "Chicken Chow Mein", label: "Chicken Chow Mein", photo: "1585032226651-759b368d7246" },
+  { name: "Sweet & Sour Chicken Balls In Batter", label: "Sweet & Sour Chicken Balls", photo: "1525755662778-989d0524087e" },
+  { name: "Salt Pepper Chicken Wings", label: "Salt & Pepper Wings", photo: "1569058242253-92a9c755a0ec" },
+  { name: "Crispy Shredded Chilli Beef", label: "Crispy Chilli Beef", photo: "1774668770914-2a37b84c3ef9" },
+];
 
 // The shop's own "Recommended for you" list [web]; the first four get a Popular badge in the menu
 export const RECOMMENDED = [

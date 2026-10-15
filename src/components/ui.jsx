@@ -54,19 +54,50 @@ export function Stars({ n = 5, size = 16, label }) {
   );
 }
 
-// "4.6 ★★★★★ · 700+ reviews"
+// Trust badges link to Reviews. The rating is the shop's Foodhub score, so the label says
+// "reviews", not Google.
+export const REVIEWS_LABEL = `Rated ${RATING.value} from ${RATING.label} reviews. Read our reviews`;
+
+// Smooth scroll to Reviews (instant with reduced motion), then pulse its heading once the
+// scroll arrives so the click visibly lands. Falls back to the plain #reviews jump without JS.
+export function goToReviews(e) {
+  const section = document.getElementById("reviews");
+  if (!section) return;
+  e?.preventDefault();
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  section.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  if (location.hash !== "#reviews") history.pushState(null, "", "#reviews");
+
+  let fired = false;
+  const flash = () => {
+    if (fired) return;
+    fired = true;
+    window.removeEventListener("scrollend", flash);
+    section.classList.remove("is-flash");
+    void section.offsetWidth; // restart the animation on repeat clicks
+    section.classList.add("is-flash");
+    setTimeout(() => section.classList.remove("is-flash"), 1100);
+  };
+  if (reduce) flash();
+  else {
+    window.addEventListener("scrollend", flash, { once: true });
+    setTimeout(flash, 1200); // already in place (no scroll), or no scrollend support
+  }
+}
+
+// "4.6 ★★★★★ · 700+ reviews", links to the Reviews section
 export function RatingPill({ className = "" }) {
   return (
-    <p className={`rating-pill ${className}`}>
+    <a href="#reviews" className={`rating-pill trust-link ${className}`} onClick={goToReviews} aria-label={REVIEWS_LABEL}>
       <strong>{RATING.value}</strong>
-      <Stars n={5} size={14} label={`Rated ${RATING.value} out of 5`} />
+      <Stars n={5} size={14} />
       <span>· {RATING.label} reviews</span>
-    </p>
+    </a>
   );
 }
 
 // Warm amber tint, +5% saturation and a faint vignette (see .photo in styles.css)
-export function Photo({ id, alt, sizes = "100vw", widths = [400, 640, 960, 1280], eager = false, className = "" }) {
+export function Photo({ id, alt, sizes = "100vw", widths = [400, 640, 960, 1280], eager = false, className = "", onError }) {
   return (
     <div className={`photo ${className}`}>
       <img
@@ -78,6 +109,7 @@ export function Photo({ id, alt, sizes = "100vw", widths = [400, 640, 960, 1280]
         fetchpriority={eager ? "high" : undefined}
         decoding="async"
         draggable="false"
+        onError={onError}
       />
     </div>
   );

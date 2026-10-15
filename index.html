@@ -6,7 +6,7 @@
     <title>Magic Wok Chinese Takeaway | High Wycombe | Call 01494 440678</title>
     <meta name="description" content="Cantonese Chinese takeaway on Amersham Road, High Wycombe. Rated 4.6 from 700+ reviews. Delivery in around 75 minutes, pickup in 30. Call 01494 440678 or WhatsApp to order." />
     <meta property="og:title" content="Magic Wok Chinese Takeaway, High Wycombe" />
-    <meta property="og:description" content="Fresh from the wok, ready when you are. Delivery and collection across High Wycombe." />
+    <meta property="og:description" content="Cooked to order. Collected hot. Delivered to your door. Chinese takeaway on Amersham Road, High Wycombe." />
     <meta property="og:image" content="/brand/og-image.png" />
     <meta property="og:type" content="restaurant" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -19,12 +19,23 @@
     <link rel="icon" type="image/png" sizes="48x48" href="/icons/favicon-48.png" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
-    <meta name="theme-color" content="#1A0F0A" />
+    <meta name="theme-color" content="#8B1A1A" />
 
+    <!-- Intro plays once per browser session (never with reduced motion). Decided before first paint so nothing flashes. -->
+    <script>
+      (function () {
+        try {
+          var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+          if (!reduce && !sessionStorage.getItem("mw-intro")) {
+            sessionStorage.setItem("mw-intro", "1");
+            document.documentElement.setAttribute("data-intro", "play");
+          }
+        } catch (e) {}
+      })();
+    </script>
+
+    <link rel="preload" as="image" href="/chef-final.png" />
     <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
-    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1523905330026-b8bd1f5f320e?auto=format&fit=crop&w=960&q=72"
-      imagesrcset="https://images.unsplash.com/photo-1523905330026-b8bd1f5f320e?auto=format&fit=crop&w=640&q=72 640w, https://images.unsplash.com/photo-1523905330026-b8bd1f5f320e?auto=format&fit=crop&w=960&q=72 960w, https://images.unsplash.com/photo-1523905330026-b8bd1f5f320e?auto=format&fit=crop&w=1440&q=72 1440w, https://images.unsplash.com/photo-1523905330026-b8bd1f5f320e?auto=format&fit=crop&w=2000&q=72 2000w"
-      imagesizes="100vw" fetchpriority="high" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700;800&display=swap" />

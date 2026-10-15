@@ -1,5 +1,6 @@
 import Header from "./components/Header.jsx";
 import Hero from "./components/Hero.jsx";
+import Intro from "./components/Intro.jsx";
 import { Fuse } from "./components/ui.jsx";
 import { OrderProvider, WhatsAppOrb } from "./components/Order.jsx";
 import { About, BackToTop, Divider, Faq, Featured, Footer, Marquee, Menu, MobileBar, Reviews, Visit } from "./components/Sections.jsx";
@@ -10,6 +11,7 @@ export default function App() {
   const status = useOpenStatus();
   return (
     <OrderProvider>
+      <Intro />
       <a className="skip" href="#menu">Skip to menu</a>
       <Header />
       <main>

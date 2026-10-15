@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, m as motion } from "framer-motion";
 import Icon from "../icons/Icon.jsx";
-import MagicWokLogo from "./MagicWokLogo.jsx";
-import { Divider, Lantern, OpenBadge, Photo, Reveal, SectionHead, Seal, Stars, Zh } from "./ui.jsx";
-import { OrderButton, useOrder } from "./Order.jsx";
+import MagicWokWordmark from "./MagicWokWordmark.jsx";
+import MagicWokChef from "./MagicWokChef.jsx";
+import { Divider, Lantern, OpenBadge, Photo, REVIEWS_LABEL, Reveal, SectionHead, Seal, Stars, Zh, goToReviews } from "./ui.jsx";
+import { CartButton, OrderButton, useOrder } from "./Order.jsx";
 import { MENU, HIDDEN_ZH, cleanLabel, formatPrice } from "../data/menu.js";
 import {
   BUSINESS, DELIVERY_HOURS_NOTE, FAQ, FEATURED, HOURS_TEXT, IMAGES, POPULAR, RATING, RECOMMENDED, REVIEWS, SERVICE, ZH, img,
@@ -460,15 +461,21 @@ export function Footer() {
     <footer className="footer">
       <div className="container footer__grid">
         <div>
-          <MagicWokLogo className="footer__logo" />
-          <p className="footer__rating">
-            <Stars n={5} size={14} label={`Rated ${RATING.value} out of 5`} /> Rated {RATING.value} from {RATING.label} reviews
-          </p>
+          <div className="footer__brand">
+            <MagicWokChef className="footer__chef" alt="" />
+            <div>
+              <MagicWokWordmark className="footer__logo" />
+              <p className="footer__tag">Chinese Takeaway · High Wycombe</p>
+            </div>
+          </div>
+          <a href="#reviews" className="footer__rating trust-link" onClick={goToReviews} aria-label={REVIEWS_LABEL}>
+            <Stars n={5} size={14} /> Rated {RATING.value} from {RATING.label} reviews
+          </a>
         </div>
         <address className="footer__col">
           <p><Icon name="pin" size={18} /> {BUSINESS.street}, {BUSINESS.town} {BUSINESS.postcode}</p>
           <p><Icon name="phone" size={18} /> <a href={BUSINESS.phoneHref}>{BUSINESS.phone}</a></p>
-          <p><OrderButton className="footer__order" showCount={false} iconSize={18} /></p>
+          <p><OrderButton className="footer__order" iconSize={18} /></p>
         </address>
         <div className="footer__col">
           {HOURS_TEXT.map((h) => (
@@ -498,6 +505,7 @@ export function MobileBar() {
         <Icon name="phone" size={18} /> Call
       </a>
       <OrderButton label="Order" />
+      <CartButton className="mobilebar__cart" />
     </nav>
   );
 }
