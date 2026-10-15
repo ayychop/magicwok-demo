@@ -54,8 +54,8 @@ export function Stars({ n = 5, size = 16, label }) {
   );
 }
 
-// Trust badges link to Reviews. The rating is the shop's Foodhub score, so the label says
-// "reviews", not Google.
+// Trust badges link to Reviews. The rating is the shop's Foodhub score: credit it to Foodhub,
+// never Google.
 export const REVIEWS_LABEL = `Rated ${RATING.value} from ${RATING.label} reviews. Read our reviews`;
 
 // Smooth scroll to Reviews (instant with reduced motion), then pulse its heading once the

@@ -122,9 +122,9 @@ export const FEATURED = [
 
 // Reviews: no testimonials are shown until the owner sends genuine ones (first name + initial,
 // with permission). Publishing invented reviews as real is unlawful in the UK (DMCC Act 2024).
-// RATING above is the shop's score on its Foodhub ordering site, not Google, so copy that shows
-// it must not say "on Google".
-export const GOOGLE_REVIEWS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(BUSINESS.mapsQuery)}`;
+// RATING above is the shop's score on Foodhub (their ordering site), so credit it to Foodhub and
+// never say "on Google". This is that public reviews page: 4.6 from 736 reviews.
+export const FOODHUB_REVIEWS_URL = "https://magicwokwycombe.co.uk/review";
 
 export const FAQ = [
   { q: "Do you deliver?", a: "Yes, delivery available across High Wycombe, usually in around 75 minutes. Call 01494 440678 or WhatsApp us to order." },

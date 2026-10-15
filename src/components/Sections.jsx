@@ -7,7 +7,7 @@ import { Divider, Lantern, OpenBadge, Photo, REVIEWS_LABEL, Reveal, SectionHead,
 import { CartButton, OrderButton, useOrder } from "./Order.jsx";
 import { MENU, HIDDEN_ZH, cleanLabel, formatPrice } from "../data/menu.js";
 import {
-  BUSINESS, DELIVERY_HOURS_NOTE, FAQ, FEATURED, GOOGLE_REVIEWS_URL, HOURS_TEXT, IMAGES, POPULAR, RATING, RECOMMENDED, SERVICE, ZH, img,
+  BUSINESS, DELIVERY_HOURS_NOTE, FAQ, FEATURED, FOODHUB_REVIEWS_URL, HOURS_TEXT, IMAGES, POPULAR, RATING, RECOMMENDED, SERVICE, ZH, img,
 } from "../data/site.js";
 import { useAutoScroll, useRevealOnce, useScrollY } from "../hooks.js";
 
@@ -397,11 +397,11 @@ export function Reviews() {
           </span>
         </Reveal>
         <Reveal as="p" className="rating__line" delay={80}>
-          Rated {RATING.value} from over 700 reviews on our online ordering site.
+          Rated {RATING.value} from over 700 orders on Foodhub
         </Reveal>
         <Reveal delay={140}>
-          <a className="btn btn--gold" href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer">
-            Read all reviews on Google <span aria-hidden="true">→</span>
+          <a className="btn btn--gold" href={FOODHUB_REVIEWS_URL} target="_blank" rel="noopener noreferrer">
+            Read more on Foodhub <span aria-hidden="true">→</span>
             <span className="sr-only"> (opens in a new tab)</span>
           </a>
         </Reveal>
