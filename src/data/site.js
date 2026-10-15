@@ -1,5 +1,5 @@
 // Magic Wok business facts. Sources, checked 15 Oct 2026:
-//   [web]   the shop's ordering site https://magicwokwycombe.co.uk (store feed + schema.org data)
+//   [web]   the shop's previous Foodhub ordering site (store feed + schema.org data)
 //   [flyer] the printed menu, public/logo-reference.png (July 2020, older, used only where noted)
 // Edit values here and the whole site updates.
 
@@ -122,9 +122,10 @@ export const FEATURED = [
 
 // Reviews: no testimonials are shown until the owner sends genuine ones (first name + initial,
 // with permission). Publishing invented reviews as real is unlawful in the UK (DMCC Act 2024).
-// RATING above is the shop's score on Foodhub (their ordering site), so credit it to Foodhub and
-// never say "on Google". This is that public reviews page: 4.6 from 736 reviews.
-export const FOODHUB_REVIEWS_URL = "https://magicwokwycombe.co.uk/review";
+// RATING above is the shop's score on Foodhub (4.6 from 736 reviews), so credit it to Foodhub and
+// never say "on Google". No link may lead to the old ordering site, and Foodhub has no public
+// store page outside it, so "Read more" opens the shop's Google Maps listing instead.
+export const GOOGLE_REVIEWS_URL = "https://www.google.com/maps/search/?api=1&query=Magic+Wok+Chinese+Takeaway+High+Wycombe";
 
 export const FAQ = [
   { q: "Do you deliver?", a: "Yes, delivery available across High Wycombe, usually in around 75 minutes. Call 01494 440678 or WhatsApp us to order." },

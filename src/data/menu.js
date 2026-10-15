@@ -1,5 +1,5 @@
 // MAGIC WOK menu, scraped 15 Oct 2026 from the shop's own ordering site
-// (https://magicwokwycombe.co.uk/order-now, public menu feed). 143 items, 16 categories.
+// (their previous Foodhub ordering site, public menu feed). 143 items, 16 categories.
 // Names, Chinese labels (zh) and prices are kept exactly as published there, including
 // the shop's own spellings and the "@" marker on battered balls (hidden on screen by cleanLabel).
 // Prices are GBP, VAT included. To update: edit an entry here, the site reads everything from this file.
