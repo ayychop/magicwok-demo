@@ -120,16 +120,11 @@ export const FEATURED = [
   { name: "Salt & Pepper Chips", zh: "椒盐条", price: "4.90", sub: "Onion, pepper, chilli", photo: "1630384060421-cb20d0e0649d" },
 ];
 
-// TODO(owner): PLACEHOLDER REVIEWS, written for layout only. They are NOT real customers.
-// Each card shows a "Sample" tag while `sample: true`. Replace with genuine reviews
-// (first name + initial, with permission) and remove `sample` before launch.
-// Publishing invented reviews as real is unlawful in the UK (DMCC Act 2024).
-export const REVIEWS = [
-  { name: "Sample customer", area: "Totteridge", stars: 5, sample: true, text: "Food arrived piping hot and the salt and pepper chicken wings were perfect, proper wok flavour. Our new Friday night order." },
-  { name: "Sample customer", area: "Downley", stars: 5, sample: true, text: "Rang through our order, picked up thirty minutes later and it was ready and waiting. Generous portions and the chow mein is the best in Wycombe." },
-  { name: "Sample customer", area: "Terriers", stars: 4, sample: true, text: "Fresh, not greasy, and great value. Singapore noodles have a real kick. Delivery took a while on a Saturday but worth the wait." },
-  { name: "Sample customer", area: "Hazlemere", stars: 5, sample: true, text: "Crispy duck was spot on and the sweet and sour sauce tastes homemade. Lovely to have a reliable local Chinese." },
-];
+// Reviews: no testimonials are shown until the owner sends genuine ones (first name + initial,
+// with permission). Publishing invented reviews as real is unlawful in the UK (DMCC Act 2024).
+// RATING above is the shop's score on its Foodhub ordering site, not Google, so copy that shows
+// it must not say "on Google".
+export const GOOGLE_REVIEWS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(BUSINESS.mapsQuery)}`;
 
 export const FAQ = [
   { q: "Do you deliver?", a: "Yes, delivery available across High Wycombe, usually in around 75 minutes. Call 01494 440678 or WhatsApp us to order." },

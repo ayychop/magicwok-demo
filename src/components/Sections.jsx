@@ -7,7 +7,7 @@ import { Divider, Lantern, OpenBadge, Photo, REVIEWS_LABEL, Reveal, SectionHead,
 import { CartButton, OrderButton, useOrder } from "./Order.jsx";
 import { MENU, HIDDEN_ZH, cleanLabel, formatPrice } from "../data/menu.js";
 import {
-  BUSINESS, DELIVERY_HOURS_NOTE, FAQ, FEATURED, HOURS_TEXT, IMAGES, POPULAR, RATING, RECOMMENDED, REVIEWS, SERVICE, ZH, img,
+  BUSINESS, DELIVERY_HOURS_NOTE, FAQ, FEATURED, GOOGLE_REVIEWS_URL, HOURS_TEXT, IMAGES, POPULAR, RATING, RECOMMENDED, SERVICE, ZH, img,
 } from "../data/site.js";
 import { useAutoScroll, useRevealOnce, useScrollY } from "../hooks.js";
 
@@ -389,27 +389,22 @@ export function Reviews() {
       <div className="reviews__bg" style={bgShown ? { "--bg": `url(${img(IMAGES.spiceFlatlay, 1200)})` } : undefined} aria-hidden="true" />
       <div className="container">
         <SectionHead eyebrow="Local favourite" title="What High Wycombe Says" zh={ZH.reviews} id="reviews-title" />
-        <Reveal className="rating">
+        <Reveal className="rating rating--big">
           <span className="rating__num depth">{RATING.value}</span>
           <span>
-            <Stars n={5} size={20} label={`Rated ${RATING.value} out of 5`} />
+            <Stars n={5} size={30} label={`Rated ${RATING.value} out of 5`} />
             <small>{RATING.label} reviews</small>
           </span>
         </Reveal>
-        <ul className="reviews__grid">
-          {REVIEWS.map((r, i) => (
-            <Reveal as="li" key={i} className="review" delay={i * 80}>
-              {r.sample && <span className="review__tag">Sample</span>}
-              <Stars n={r.stars} />
-              <blockquote>
-                <p>{r.text}</p>
-              </blockquote>
-              <p className="review__by">
-                <strong>{r.name}</strong> · {r.area}
-              </p>
-            </Reveal>
-          ))}
-        </ul>
+        <Reveal as="p" className="rating__line" delay={80}>
+          Rated {RATING.value} from over 700 reviews on our online ordering site.
+        </Reveal>
+        <Reveal delay={140}>
+          <a className="btn btn--gold" href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer">
+            Read all reviews on Google <span aria-hidden="true">→</span>
+            <span className="sr-only"> (opens in a new tab)</span>
+          </a>
+        </Reveal>
       </div>
     </section>
   );
