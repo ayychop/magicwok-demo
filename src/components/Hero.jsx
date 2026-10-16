@@ -63,8 +63,7 @@ function Plates() {
   const { openDish } = useOrder();
   return (
     <div className="hero__plates">
-      <p className="hero__plates-label">Most ordered</p>
-      <ul className="plates">
+      <ul className="plates" aria-label="Most ordered">
         {HERO_PLATES.map((p) => (
           <li key={p.name}>
             <button type="button" className="plate zoom-host" onClick={() => openDish({ name: p.name, photo: p.photo })} aria-label={`${p.label}, see details`}>

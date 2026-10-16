@@ -2858,15 +2858,6 @@ html[data-intro="play"] .hero__actions > * {
   gap: var(--s-4);
   margin-top: var(--s-8);
 }
-.hero__plates-label {
-  max-width: 72px;
-  font-size: var(--fs-xs);
-  font-weight: 600;
-  line-height: 1.3;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--gold-light);
-}
 .plates {
   display: flex;
 }
@@ -2957,9 +2948,6 @@ html[data-intro="play"] .hero__actions > * {
     flex-direction: column;
     align-items: flex-start;
     gap: var(--s-3);
-  }
-  .hero__plates-label {
-    max-width: none;
   }
   .plate {
     width: 76px;
@@ -3362,5 +3350,35 @@ html[data-intro="play"] .hero-chef {
   }
   100% {
     opacity: 0;
+  }
+}
+
+/* phones: keep the "Call us…" line and the plates clear of the small chef on the right */
+@media (max-width: 599px) {
+  .hero__human {
+    max-width: calc(100% - 96px);
+  }
+  .plates li + li {
+    margin-left: -16px;
+  }
+}
+@media (max-width: 379px) {
+  .plates li + li {
+    margin-left: -20px;
+  }
+  .hero-chef {
+    --chef-w: 120px;
+  }
+  .hero__human {
+    max-width: calc(100% - 84px);
+  }
+}
+@media (max-width: 339px) {
+  /* no room beside the plates on the very smallest phones */
+  .hero-chef {
+    display: none;
+  }
+  .hero__human {
+    max-width: none;
   }
 }
